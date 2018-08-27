@@ -6,14 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>yhbl&#39;note</title>
+  <title>安恒2018-8应急响应 | yhbl&#39;note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="title: 安恒2018-8应急响应date: 2018-08-27 12:58:02tags: - 流量分析 - wireshark  安恒2018-8应急响应流量分析">
+  <meta name="description" content="安恒2018-8应急响应流量分析">
+<meta name="keywords" content="wireshark,流量分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="yhbl&#39;note">
+<meta property="og:title" content="安恒2018-8应急响应">
 <meta property="og:url" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/index.html">
 <meta property="og:site_name" content="yhbl&#39;note">
-<meta property="og:description" content="title: 安恒2018-8应急响应date: 2018-08-27 12:58:02tags: - 流量分析 - wireshark  安恒2018-8应急响应流量分析">
+<meta property="og:description" content="安恒2018-8应急响应流量分析">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-2018082620562958.png">
 <meta property="og:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-20180826210123563.png">
@@ -28,10 +29,10 @@
 <meta property="og:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-2018082718362681.png">
 <meta property="og:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-20180827203003720.png">
 <meta property="og:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-20180827204027355.png">
-<meta property="og:updated_time" content="2018-08-27T13:11:13.507Z">
+<meta property="og:updated_time" content="2018-08-27T13:15:54.656Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yhbl&#39;note">
-<meta name="twitter:description" content="title: 安恒2018-8应急响应date: 2018-08-27 12:58:02tags: - 流量分析 - wireshark  安恒2018-8应急响应流量分析">
+<meta name="twitter:title" content="安恒2018-8应急响应">
+<meta name="twitter:description" content="安恒2018-8应急响应流量分析">
 <meta name="twitter:image" content="http://yoursite.com/2018/08/27/安恒2018-8应急响应/markdown-img-paste-2018082620562958.png">
   
     <link rel="alternative" href="/atom.xml" title="yhbl&#39;note" type="application/atom+xml">
@@ -167,14 +168,26 @@
             <article id="post-安恒2018-8应急响应" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      安恒2018-8应急响应
+    </h1>
+  
+
+        
+        <!-- 显示阅读和评论数 -->
+        
+        <a href="/2018/08/27/安恒2018-8应急响应/" class="archive-article-date">
+  	<time datetime="2018-08-27T04:58:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-27</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<p>title: 安恒2018-8应急响应<br>date: 2018-08-27 12:58:02<br>tags:</p>
-<pre><code>- 流量分析
-- wireshark
-</code></pre><hr>
-<h1 id="安恒2018-8应急响应流量分析"><a href="#安恒2018-8应急响应流量分析" class="headerlink" title="安恒2018-8应急响应流量分析"></a>安恒2018-8应急响应流量分析</h1><a id="more"></a>
+        <h1 id="安恒2018-8应急响应流量分析"><a href="#安恒2018-8应急响应流量分析" class="headerlink" title="安恒2018-8应急响应流量分析"></a>安恒2018-8应急响应流量分析</h1><a id="more"></a>
 <h2 id="0x00"><a href="#0x00" class="headerlink" title="0x00"></a>0x00</h2><blockquote>
 <p>&emsp;&emsp;总的来说这次的流量分析题思路比较清晰，欠缺的是解题技巧，以及熟料掌握攻击方式的指纹特征，在协议与ip过滤的基础上也用该考虑关键词的过滤。同时在分析攻击者行为以及查找线索的同时不能局限与一种思路。<br>&emsp;&emsp;我分析流量包猜想攻击者的攻击行为方式为，首先攻击者获取了内网一台主机（192.168.94.59）的控制权限，然后以该台主机为跳板然后对一台web服务器（192.168.32.189）进行了扫描，在后来的攻击中找到了后台地址，然后爆破进入了后台，上传了webshell(1.php)后来应该是改名为了a.php,然后读取一些网站的配置文件，并且访问了数据库以及主机的网络配置信息，后来攻击者爆破进入了webmail的后台。</p>
 </blockquote>
@@ -235,6 +248,21 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">wireshark</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">流量分析</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
