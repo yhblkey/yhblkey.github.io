@@ -16,17 +16,17 @@
 <meta property="og:site_name" content="yhbl&#39;note">
 <meta property="og:description" content="跳入了代码审计的深坑中…">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547467303307.png">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547468427670.png">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547468449380.png">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550057997351.png">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550059883858.png">
-<meta property="og:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1550063227488.png">
-<meta property="og:updated_time" content="2019-04-08T03:34:25.775Z">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1547467303307.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1547468427670.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1547468449380.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1550057997351.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1550059883858.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1550063227488.png">
+<meta property="og:updated_time" content="2019-04-08T08:11:00.329Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CODEBREAKING_Learn">
 <meta name="twitter:description" content="跳入了代码审计的深坑中…">
-<meta name="twitter:image" content="http://yoursite.com/home/yhbl/.config/Typora/typora-user-images/1547467303307.png">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/08/CODEBREAKING-Learn/CODEBREAKING-Learn/1547467303307.png">
   
     <link rel="alternative" href="/atom.xml" title="yhbl&#39;note" type="application/atom+xml">
   
@@ -208,10 +208,10 @@
 </ul>
 </blockquote>
 <p>php的PCRE库使用的就是NFA的正则引擎，就会涉及到回溯的一个过程</p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547467303307.png" alt="1547467303307"></p>
+<p><img src="./CODEBREAKING-Learn/1547467303307.png" alt="1547467303307"></p>
 <p>当匹配到<code>.*</code>的时候读入所有字符，然后从最后开始进行回溯匹配，当匹配到<code>;</code>时完成匹配否则继续回溯。在php中有最大的匹配回溯次数，php5.2及之前这个次数为100000，之后一直到如今的7.2都是1000000</p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547468427670.png" alt="1547468427670"></p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1547468449380.png" alt="1547468449380"></p>
+<p><img src="./CODEBREAKING-Learn/1547468427670.png" alt="1547468427670"></p>
+<p><img src="./CODEBREAKING-Learn/1547468449380.png" alt="1547468449380"></p>
 <p>当回溯的次数超过这个限制的时候，会返回一个<code>false</code> （匹配成功返回<code>1</code>，匹配失败返回的是<code>0</code>）</p>
 <p>只是用if进行判断的话完全可以使函数返回<code>false</code>来进行绕过，即上传的文件内容经过构造使回溯次数超过1000*1000次。</p>
 <p>POC为</p>
@@ -221,13 +221,13 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'read-source'</span>])) &#123;</span><br><span class="line">    <span class="keyword">exit</span>(show_source(<span class="keyword">__FILE__</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">define(<span class="string">'DATA_DIR'</span>, dirname(<span class="keyword">__FILE__</span>) . <span class="string">'/data/'</span> . md5($_SERVER[<span class="string">'REMOTE_ADDR'</span>]));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!is_dir(DATA_DIR)) &#123;</span><br><span class="line">    mkdir(DATA_DIR, <span class="number">0755</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br><span class="line">chdir(DATA_DIR);</span><br><span class="line"></span><br><span class="line">$domain = <span class="keyword">isset</span>($_POST[<span class="string">'domain'</span>]) ? $_POST[<span class="string">'domain'</span>] : <span class="string">''</span>;</span><br><span class="line">$log_name = <span class="keyword">isset</span>($_POST[<span class="string">'log'</span>]) ? $_POST[<span class="string">'log'</span>] : date(<span class="string">'-Y-m-d'</span>);</span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">empty</span>($_POST) &amp;&amp; $domain):</span><br><span class="line">    $command = sprintf(<span class="string">"dig -t A -q %s"</span>, escapeshellarg($domain));</span><br><span class="line">    $output = shell_exec($command);</span><br><span class="line"></span><br><span class="line">    $output = htmlspecialchars($output, ENT_HTML401 | ENT_QUOTES);</span><br><span class="line"></span><br><span class="line">    $log_name = $_SERVER[<span class="string">'SERVER_NAME'</span>] . $log_name;</span><br><span class="line">    <span class="keyword">if</span>(!in_array(pathinfo($log_name, PATHINFO_EXTENSION), [<span class="string">'php'</span>, <span class="string">'php3'</span>, <span class="string">'php4'</span>, <span class="string">'php5'</span>, <span class="string">'phtml'</span>, <span class="string">'pht'</span>], <span class="keyword">true</span>)) &#123;</span><br><span class="line">        file_put_contents($log_name, $output);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span> $output;</span><br><span class="line"><span class="keyword">endif</span>; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>通过分析源代码发现在执行<code>dig</code>命令之后目标域名会回显,然后把命令执行结果写入到目标文件中,同时会对结果中的尖括号进行实体编码,然后<code>!in_array(pathinfo($log_name, PATHINFO_EXTENSION), [&#39;php&#39;, &#39;php3&#39;, &#39;php4&#39;, &#39;php5&#39;, &#39;phtml&#39;, &#39;pht&#39;], true)</code>限制了文件的扩展名.</p>
 <p>通过以上的分析想要写入shell必须对写入的内容进行编码,然后在进行保存的时候进行解码,为了使解码后的内容不影响shell执行可以采用base64对内容进行编码.根据<code>file_put_contents</code>能够支持<code>php://filter</code>可以利用<code>php://filter/write=convert.base64-decode/resource=xxx.php</code>充当文件名完成shell执行代码的写入,可以利用<code>$_SERVER[&#39;SERVER_NAME&#39;]</code>帮助构造语句.根据文档中的解释如果配置错误可以有客户端提供主机名例如使用<code>host</code>参数,然后就可以通过拼接构造最后的语句.</p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550057997351.png" alt="1550057997351"></p>
+<p><img src="./CODEBREAKING-Learn/1550057997351.png" alt="1550057997351"></p>
 <p>最后的难点是绕过后缀名的限制,通过查找资料发现在文件后缀后面添加<code>/.</code>可以绕过限制.</p>
 <h2 id="easy-phplimit"><a href="#easy-phplimit" class="headerlink" title="easy - phplimit"></a>easy - phplimit</h2><p>tips: 绕过正则限制(只允许多重函数嵌套,并且函数参数为空),通过其他方式传递参数,通过session_id或者get_defined_vars(),或者利用文件操作函数进行翻越目录</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="string">';'</span> === preg_replace(<span class="string">'/[^\W]+\((?R)?\)/'</span>, <span class="string">''</span>, $_GET[<span class="string">'code'</span>])) &#123;    </span><br><span class="line">    <span class="keyword">eval</span>($_GET[<span class="string">'code'</span>]);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该个正则的意思为匹配只存在字母数字以及下划线组成的函数名并且参数为空,<code>?R</code>表示递归整个模式,例如<code>a(aaa(aaaa(ssss())))</code>这样的形式.</p>
 <p>根据这个限制我们只能使用空参数的函数,通过学习师傅们的解决方法,了解到可以使用<code>get_defined_vars</code>获取全局的已经定义的变量.</p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550059883858.png" alt="1550059883858"></p>
+<p><img src="./CODEBREAKING-Learn/1550059883858.png" alt="1550059883858"></p>
 <p>然后通过数组操作函数<code>next</code>和<code>current</code>来选取需要的参数值.</p>
 <p>最后的payload为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">code=eval(next(current(get_defined_vars())));</span><br><span class="line">&amp;b=print_r(scandir(&apos;../&apos;));print_r(file_get_contents(&apos;../flag_phpbyp4ss&apos;));</span><br></pre></td></tr></table></figure>
@@ -237,7 +237,7 @@
 <h2 id="lumenserial"><a href="#lumenserial" class="headerlink" title="lumenserial"></a>lumenserial</h2><p>tips : pop chains </p>
 <p>本着学习的态度进行复现</p>
 <p>首先了解一下这个框架<code>lumen</code>,通过<code>composer install</code>安装一下依赖,然后查看一下路由.</p>
-<p><img src="/home/yhbl/.config/Typora/typora-user-images/1550063227488.png" alt="1550063227488"></p>
+<p><img src="./CODEBREAKING-Learn/1550063227488.png" alt="1550063227488"></p>
 <p>然后找到<code>app/Http/Controllers/EditorController.php</code>,查看里面编辑器的功能.</p>
 <p>然后可以利用<code>file_get_contents</code>来进行phar反序列化，文件上传点比较好找，允许直接上传图片.</p>
 <p>根据师傅们的操作找的是<code>Catchimage</code>,在此操作中存在下列代码:</p>
